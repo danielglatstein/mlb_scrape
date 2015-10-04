@@ -5,22 +5,32 @@ require 'json'
 
 def game_events
   open("http://gd2.mlb.com/components/game/mlb/year_2015/month_06/day_30/gid_2015_06_30_bosmlb_tormlb_1/game_events.json").read
-  #open("http://gd2.mlb.com/components/game/mlb/year_2015/#{"month"}/#{day}/gid_#{year}_#{month}_#{day}_#{away}mlb_#{home}mlb_1/game_events.json").read
+  #open("http://gd2.mlb.com/components/game/mlb/year_2015/month_#{month}/day_#{day}/gid_#{year}_#{month}_#{day}_#{away}mlb_#{home}mlb_1/game_events.json").read
 end
 
 def json_game_events
   JSON.parse(game_events)
 end
 
-def innings
-  json_game_events["data"]["game"]["inning"].each_with_object([]) do |(keys), all_innings|
-    #ultimately I to return an array with objects [1 top, 1 bottom, 2 top, etc...]
-    #then in another
-    binding.pry
+def away_innings
+  json_game_events["data"]["game"]["inning"].each_with_object([]) do |(inning), away_plays|
+    atbats = inning["top"]["atbat"]
+    atbats.each do |atbat|
+        away_plays << atbat
+    end
+  away_plays
   end
 end
 
-innings
+def home_innings
+  json_game_events["data"]["game"]["inning"].each_with_object([]) do |(inning), home_plays|
+    atbats = inning["bottom"]["atbat"]
+    atbats.each do |atbat|
+        home_plays << atbat
+    end
+  home_plays
+  end
+end
 
 # def players_events(player)
 #   #create an empty array to store all the players events
@@ -58,29 +68,3 @@ innings
 # def year(number)
 #   #takes input of year
 # end
-
-# "#LeaderBoard1_dg1 .rgMasterTable .rgPager .rgHeader"
-#so you start by going thru index with nokogiri and then find ur way to the json doc
-#6/30 
-
-
-
-
-
-
-
-
-# require "net/http"
-# require "uri"
-
-# uri = URI.parse("put_in_Http::for ")
-
-# # Shortcut
-# response = Net::HTTP.get_response(uri)
-
-# # Will print response.body
-# Net::HTTP.get_print(uri)
-
-# # Full
-# http = Net::HTTP.new(uri.host, uri.port)
-# response = http.request(Net::HTTP::Get.new(uri.request_uri)) 
